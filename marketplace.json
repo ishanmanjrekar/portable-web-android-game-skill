@@ -1,0 +1,13 @@
+{
+  "name": "web-2d-game-setup",
+  "version": "1.0.1",
+  "description": "Scaffolds a high-performance cross-platform 2D game using React, Vite, TS, Zustand, framer-motion, and Capacitor.",
+  "author": "Ishan Manjrekar",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ishanmanjrekar/portable-android-game-scaffold.git"
+  },
+  "skillFile": "SKILL.md",
+  "assetsDir": "assets"
+}
