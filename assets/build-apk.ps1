@@ -55,6 +55,12 @@ npx cap sync android
 Write-Host "`n[4/5] Compiling Android APK with Gradle..." -ForegroundColor Yellow
 
 # Store current location and change to android/ directory
+if (-not (Test-Path $AndroidDir)) {
+    Write-Host "Error: The native 'android' directory does not exist!" -ForegroundColor Red
+    Write-Host "Please ensure you have initialized the Capacitor Android project by running 'npx cap add android' and synced the web bundle." -ForegroundColor Yellow
+    Exit 1
+}
+
 Push-Location $AndroidDir
 
 try {

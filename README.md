@@ -1,27 +1,39 @@
-# 🤖 Agentic Web 2D Game Scaffold Skill
+# 🤖 Portable Android & Web 2D Game Scaffold
 
-A reusable **Agentic Skill & Prompt Plugin** for AI coding assistants (like Gemini, Claude, Cursor, or custom developer agents). 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Platform: Web | Android | iOS](https://img.shields.io/badge/Platform-Web%20%7C%20Android%20%7C%20iOS-blue.svg)](#)
+[![Stack: React + Vite + TypeScript](https://img.shields.io/badge/Stack-React%20%2B%20Vite%20%2B%20TypeScript-orange.svg)](#)
 
-This repository equips AI coding tools with the architectural knowledge, guidelines, and template assets required to scaffold a professional, high-performance, cross-platform 2D game project from scratch in a single turn.
+A professional, high-performance, cross-platform 2D game scaffolding skill and boilerplate template. Seamlessly deploy web-based 2D games to **Android APKs (without installing Android Studio)**, **iOS (via Capacitor)**, and **Itch.io (with CORS sandbox support)** from a single, unified codebase.
+
+This repository is built as an **Agentic Skill & Prompt Plugin** for AI coding assistants (like Gemini, Claude, Cursor, and custom developer agents). It equips AI coders with the exact architectural rules, templates, and build automation required to scaffold an production-ready 2D game in a single turn.
 
 ---
 
-## 🌟 What This Skill Does
+## 🌟 Key Features & Architecture
 
-When an AI coding assistant imports or reads this skill, it gains the immediate capability to setup a React 2D game environment that:
-1. **Compiles Native Android APKs Locally**: Bundles a fully portable Windows automation system (`scripts/setup-mobile-env.ps1` and `scripts/build-apk.ps1`) that downloads a localized JDK 21 and Android CLI toolset in `/.local-env/` to assemble debug binaries **without** requiring developers to install Android Studio or heavy system SDK variables.
-2. **Adapts Fluid Viewports (Bounding Box Pattern)**:
-   - **Web/Itch.io Mode**: Renders games within an aspect-ratio scale container mimicking virtual phone boundaries.
-   - **Native Capacitor APK Mode**: Detects WebView wraps and goes **100% full-screen borderless**, scaling dynamically around speaker notches, camera holes, and native Android swipe navigation lines.
-3. **Runs Flawlessly on Itch.io Sandbox embeds**: Configures relative paths and custom plugins to automatically strip CORS/sandbox script constraints (`crossorigin` attributes), bypassing the classic "gray screen freeze" bug common on itch.io CDNs.
-4. **Enforces Responsive UI/Grid standards**: Implements bolt-edge panel flex layouts and native CSS Container Queries for tile grids, avoiding layout collapses on tall mobile aspect ratios (19.5:9) or foldable devices.
-5. **Neutralizes Mobile Interference**: Hard blocks default context popup menus, pull-to-refresh reload actions, and standard text dragging, while securing notch boundaries via environment safe-area offsets (`env(safe-area-inset-*)`).
+### 1. Zero-Dependency Portable Android Builds
+* **Local SDK/JDK Sandboxing**: Contains pre-configured PowerShell scripts (`setup-mobile-env.ps1` and `build-apk.ps1`) that bootstrap a localized Adoptium OpenJDK 21 and the Android Command Line Tools under `/.local-env/`.
+* **No Heavy IDE Requirements**: Compile fully-signed native debug Android APKs directly from your command-line interface without installing Android Studio, Gradle, or setting global environment variables.
+
+### 2. Aspect-Ratio Bounding Box Scaling (Web vs. Native)
+* **Web & Itch.io Embeds**: Renders the game inside an aspect-ratio-locked virtual viewport that matches simulated phone or desktop screens without using blind CSS translation hacks.
+* **Capacitor Mobile Shell**: Automatically detects when running inside native WebViews, unlocking 100% fluid, edge-to-edge rendering that scales dynamically around camera notches, rounded device corners, and system navigation bars using safe-area variables (`env(safe-area-inset-*)`).
+
+### 3. Native Sandboxed Embed Support (Itch.io Fix)
+* **CORS Sandbox Bypass**: Integrates a custom Vite build plugin (`vite-plugin-crossorigin.ts`) that automatically strips `crossorigin` attributes from compiled HTML `<script>` and `<link>` tags.
+* **No More "Gray Screens"**: Neutralizes origin-restricted sandbox blocks that standard WebGL/React engines suffer from when hosted inside Itch.io frames.
+
+### 4. Professional Game Loops & Inputs
+* **High-Performance Loop Hook**: Features a robust `requestAnimationFrame`-based game loop (`useGameLoop.ts`) designed to handle render ticks efficiently using React mutable references.
+* **No Physics Explosions**: Clamps game loop update cycles during browser stuttering or lag spikes to keep game physics stable.
+* **Interference Neutralization**: Disables system default behaviors (iOS touch menus, pull-to-refresh reload actions, and drag-selection) to ensure high-grade, uninterrupted mobile gameplay.
 
 ---
 
 ## 📂 Repository Contents
 
-This skill is structured to be instantly parsed by AI systems:
+This skill is structured to be instantly parsed by AI systems and developers alike:
 
 ```text
 portable-android-game-scaffold/
@@ -39,7 +51,9 @@ portable-android-game-scaffold/
 
 ## 🚀 How to Load This Skill in Your AI Assistant
 
-### Method 1: Local Skill Directory Reference (Gemini / Antigravity)
+Priming your AI coding assistant with this scaffold allows it to build the game environment for you in seconds.
+
+### Option A: Local Skill Directory Reference (Gemini / Antigravity)
 If you are running an agent platform that supports local plugin overrides:
 1. Clone this repository into your local configurations directory:
    ```bash
@@ -47,7 +61,7 @@ If you are running an agent platform that supports local plugin overrides:
    ```
 2. The AI assistant will automatically discover the `/web-2d-game-setup` command, read the system guidelines in `SKILL.md`, and copy files from the `assets/` subdirectory when requested to build a new game!
 
-### Method 2: System Prompt Context Feeding (Generic AI Models)
+### Option B: System Prompt Context Feeding (Generic AI Models)
 If you are using a standard AI chat interface (like ChatGPT or Claude.ai) to scaffold a game:
 1. Copy the entire contents of [SKILL.md](./SKILL.md).
 2. Paste it as a system instruction or context header, saying:
@@ -57,3 +71,4 @@ If you are using a standard AI chat interface (like ChatGPT or Claude.ai) to sca
 
 ## 📄 License
 This repository is licensed under the MIT License - feel free to share, modify, and build custom AI-gamedev skill libraries!
+

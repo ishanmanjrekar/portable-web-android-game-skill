@@ -33,6 +33,7 @@ export function useGameLoop(callback: (deltaTime: number) => void, maxDeltaTime:
       if (requestRef.current) {
         cancelAnimationFrame(requestRef.current);
       }
+      previousTimeRef.current = undefined;
     };
   }, [maxDeltaTime]);
 }

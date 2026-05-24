@@ -5,10 +5,8 @@ export function stripCrossoriginPlugin(): Plugin {
     name: 'strip-crossorigin',
     transformIndexHtml(html: string) {
       // Itch.io sandbox blocks resources with crossorigin attributes.
-      // Strips crossorigin from both <script> and <link> tags.
-      return html
-        .replace(/<script(.*?)crossorigin(.*?)>/gi, '<script$1$2>')
-        .replace(/<link(.*?)crossorigin(.*?)>/gi, '<link$1$2>');
+      // Strips crossorigin attribute and any assigned values cleanly
+      return html.replace(/\s*crossorigin(?:=".*?")?/gi, '');
     }
   };
 }
