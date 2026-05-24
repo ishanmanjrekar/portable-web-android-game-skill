@@ -1,0 +1,44 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Diagnostic reports
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Dist/Build outputs
+dist/
+dist-ssr/
+*.local/
+dump/
+
+# Portable Android environment
+.local-env/
+
+# Editor/OS Files
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+*.suo
+*.ntvsca
+*.ntvsobj
+*.sln
+*.sw?
+
+# Capacitor native folders (added when platform is added)
+# We keep these ignored or committed depending on preference.
+# Usually native folders are committed in Capacitor projects, but we'll let the user decide.
+# We'll ignore the local gradle config files and output APKs.
+android/.gradle/
+android/local.properties
+android/app/build/
+android/app/src/main/assets/public/
