@@ -21,7 +21,7 @@ When this skill triggers, **do not** begin modifying the user's workspace immedi
 
 ### 1. Itch.io & Web Deployment Rules
 - **Relative Paths**: You MUST configure `vite.config.ts` with `base: './'` to prevent 404 errors on itch.io's nested CDN.
-- **Cross-Origin Fix**: Include the custom Vite plugin `stripCrossoriginPlugin` in `vite.config.ts` to strip the `crossorigin` attribute from `<script>` tags in `index.html`. You can find the implementation for this plugin in `assets/vite-plugin-crossorigin.ts`. This avoids "Gray Screen" bugs caused by itch.io's sandbox.
+- **Cross-Origin Fix**: Include the custom Vite plugin `stripCrossoriginPlugin` in `vite.config.ts` to strip the `crossorigin` attribute from `<script>` and `<link>` tags in `index.html`. You can find the implementation for this plugin in `assets/vite-plugin-crossorigin.ts`. This avoids "Gray Screen" bugs caused by itch.io's sandbox.
 - **POSIX Zipping**: Implement a build script in `package.json` using `bestzip`. Do NOT use native OS command line zipping tools.
 - **Asset Paths — CRITICAL**: `base: './'` only affects assets that Vite processes at build time. Any asset path written as a **literal string** in JSX or CSS (e.g. `src="/assets/icon.png"`, `backgroundImage: 'url(/assets/bg.png)'`) will **ignore** the base setting and resolve to the itch.io root, causing silent 404s. You MUST use `import.meta.env.BASE_URL` as a prefix for all `public/` folder asset references:
   ```tsx
@@ -56,6 +56,9 @@ When this skill triggers, **do not** begin modifying the user's workspace immedi
 ### 3. Mobile & Native Integration (Capacitor)
 - Initialize Capacitor with `webDir: 'dist'`.
 - Configure `capacitor.config.ts` properly with `appId`, `appName`, and `webDir`.
+- **Landscape & Portrait Configuration**: Ensure that the native project is configured to lock or adapt to the game's target orientation:
+  - **Android**: Configure `AndroidManifest.xml` under `<activity android:name=".MainActivity" ...>` with `android:screenOrientation="sensorLandscape"` (for landscape-only games) or `android:screenOrientation="portrait"` (for portrait-only games).
+  - **iOS**: Configure `UISupportedInterfaceOrientations` inside `Info.plist` to lock orientations as requested.
 - Prevent default touch interactions (long press context menu, pull-to-refresh) via CSS and JS on the game container:
   ```css
   touch-action: none;

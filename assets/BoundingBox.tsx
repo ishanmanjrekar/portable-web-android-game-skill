@@ -21,10 +21,17 @@ export const BoundingBox: React.FC<GameLayerProps> = ({ width, height, children 
         const { clientWidth, clientHeight } = containerRef.current.parentElement || document.body;
 
         // On mobile itch.io, the iframe may be wider/taller than the physical screen.
-        // screen.width/height give the actual device dimensions in CSS pixels,
-        // so we clamp the available space to what the device can actually show.
-        const availW = Math.min(clientWidth || window.innerWidth, window.screen.width);
-        const availH = Math.min(clientHeight || window.innerHeight, window.screen.height);
+        // screen.width/height give the actual device dimensions in CSS pixels.
+        // We clamp available space to physical screen bounds, accounting for physical
+        // orientation to prevent rotation clipping on devices with stale screen dimensions.
+        const isLandscape = window.innerWidth > window.innerHeight;
+        const screenW = window.screen.width;
+        const screenH = window.screen.height;
+        const realScreenW = isLandscape ? Math.max(screenW, screenH) : Math.min(screenW, screenH);
+        const realScreenH = isLandscape ? Math.min(screenW, screenH) : Math.max(screenW, screenH);
+
+        const availW = Math.min(clientWidth || window.innerWidth, realScreenW);
+        const availH = Math.min(clientHeight || window.innerHeight, realScreenH);
 
         if (checkCapacitor) {
           // Native Android APK: 100% fluid full-screen borderless layout
