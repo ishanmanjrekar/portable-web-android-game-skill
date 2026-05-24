@@ -1,106 +1,59 @@
-# 🎮 Portable Android Game Scaffold & Boilerplate
+# 🤖 Agentic Web 2D Game Scaffold Skill
 
-A high-performance, cross-platform 2D game boilerplate built with **React, Vite, TypeScript, Zustand, Framer Motion**, and **Capacitor**. 
+A reusable **Agentic Skill & Prompt Plugin** for AI coding assistants (like Gemini, Claude, Cursor, or custom developer agents). 
 
-Designed specifically for **game developers** who want to deploy a single codebase flawlessly to the **Web, Itch.io**, and **Android (native APK)**—featuring a **one-click portable build pipeline** that requires **no manual Android Studio installation** or global environment variables!
-
----
-
-## ✨ Features
-
-- **📦 100% Portable Local Android Build**: Comes with built-in PowerShell automation scripts that download a lightweight, isolated Adoptium JDK 21 and Android CLI toolset directly into a local `.local-env/` folder. Build native APKs locally with single commands!
-- **📐 Advanced Bounding Box Pattern**:
-  - **Web/Itch.io Mode**: Dynamically centers and scales game dimensions with aspect-ratio clamping to simulate standard device views.
-  - **Native Android APK Mode**: Automatically detects Capacitor WebView wraps and goes **100% fluid full-screen borderless**, giving responsive layouts full screen utilization.
-- **📱 Mobile & Touch Native Optimizations**:
-  - Auto-binding of camera notches and device navigation swipe bars using safe area CSS parameters (`env(safe-area-inset-top)` etc.).
-  - Hard blocks on web browser default long-press menus, callouts, and pull-to-refresh pull gestures.
-- **⚡ Itch.io Sandbox Fixes**: Includes custom build pipelines configuring relative asset mapping (`base: './'`) and automatically stripping CORS `crossorigin` markers from output HTML injections, avoiding common "gray screen" sandboxing crashes on itch.io CDN embeds.
-- **🎯 Premium Aesthetics**: Beautiful cosmic-dark design palette featuring floating micro-animations, neon stardust orbs, and GPU hardware acceleration.
+This repository equips AI coding tools with the architectural knowledge, guidelines, and template assets required to scaffold a professional, high-performance, cross-platform 2D game project from scratch in a single turn.
 
 ---
 
-## 🛠️ Core Tech Stack
+## 🌟 What This Skill Does
 
-- **UI Framework**: React 18 + Vite + TypeScript
-- **State & Game Math**: Zustand (High-performance lightweight atomic state manager)
-- **Fluid UI Animations**: Framer Motion (GPU hardware-accelerated loops)
-- **Native Wrap**: Capacitor 6 (Cross-platform WebView native runtime)
-- **Packager**: bestzip (Cross-platform POSIX zipping engine)
-
----
-
-## 🚀 Getting Started
-
-### 1. Installation
-Clone the repository and install standard packages:
-```bash
-git clone https://github.com/ishanmanjrekar/portable-android-game-scaffold.git
-cd portable-android-game-scaffold
-npm install
-```
-
-### 2. Run Web Development Server
-Launch the high-speed local Vite environment:
-```bash
-npm run dev
-```
+When an AI coding assistant imports or reads this skill, it gains the immediate capability to setup a React 2D game environment that:
+1. **Compiles Native Android APKs Locally**: Bundles a fully portable Windows automation system (`scripts/setup-mobile-env.ps1` and `scripts/build-apk.ps1`) that downloads a localized JDK 21 and Android CLI toolset in `/.local-env/` to assemble debug binaries **without** requiring developers to install Android Studio or heavy system SDK variables.
+2. **Adapts Fluid Viewports (Bounding Box Pattern)**:
+   - **Web/Itch.io Mode**: Renders games within an aspect-ratio scale container mimicking virtual phone boundaries.
+   - **Native Capacitor APK Mode**: Detects WebView wraps and goes **100% full-screen borderless**, scaling dynamically around speaker notches, camera holes, and native Android swipe navigation lines.
+3. **Runs Flawlessly on Itch.io Sandbox embeds**: Configures relative paths and custom plugins to automatically strip CORS/sandbox script constraints (`crossorigin` attributes), bypassing the classic "gray screen freeze" bug common on itch.io CDNs.
+4. **Enforces Responsive UI/Grid standards**: Implements bolt-edge panel flex layouts and native CSS Container Queries for tile grids, avoiding layout collapses on tall mobile aspect ratios (19.5:9) or foldable devices.
+5. **Neutralizes Mobile Interference**: Hard blocks default context popup menus, pull-to-refresh reload actions, and standard text dragging, while securing notch boundaries via environment safe-area offsets (`env(safe-area-inset-*)`).
 
 ---
 
-## 📱 Compiling Native Android APKs (Windows Portable Pipeline)
+## 📂 Repository Contents
 
-This project contains a fully self-contained build system. **You do not need to install Android Studio or configure global PATH parameters.**
-
-### Step 1: Bootstrap the Portable SDK & JDK
-Open PowerShell as an Administrator or inside a standard terminal and execute:
-```powershell
-./scripts/setup-mobile-env.ps1
-```
-*This downloads Adoptium JDK 21, Android Cmdline Tools, accepts licensing agreements, and prepares Android API 34 platforms locally under `/.local-env/`.*
-
-### Step 2: Compile the Native APK
-Compile the web assets and trigger the local Gradle assembly wrap:
-```powershell
-./scripts/build-apk.ps1
-```
-*Your finished, ready-to-install debug binary will be compiled and relocated to **`/dump/game-debug.apk`**!*
-
----
-
-## 📦 Zipping for Itch.io Upload
-To build a highly compliant web bundle and package it into a zip package for itch.io:
-```bash
-npm run build:itch
-```
-*Your optimized itch.io package will be saved under **`/dump/game-upload.zip`**.*
-
----
-
-## 📂 Project Organization
+This skill is structured to be instantly parsed by AI systems:
 
 ```text
 portable-android-game-scaffold/
-├── .local-env/          # Local portable JDK and Android SDK (gitignored)
-├── assets/              # Core Vite templates and plugins
-├── dump/                # Final output builds (game-upload.zip, game-debug.apk) (gitignored)
-├── scripts/
-│   ├── setup-mobile-env.ps1  # Portable setup bootstrapper
-│   └── build-apk.ps1         # Portable Gradle APK compiler
-├── src/
-│   ├── components/
-│   │   └── BoundingBox.tsx   # Native notch & viewport aspect-ratio scaling
-│   ├── store/
-│   │   └── gameStore.ts      # Global clicker game state, powerups & stats
-│   ├── App.tsx               # Primary game wrapper with elastic UI boundaries
-│   ├── index.css             # Main styling rules, touch preventions & keyframes
-│   └── main.tsx              # React mounting root
-├── capacitor.config.ts  # Capacitor mobile build declarations
-├── vite.config.ts       # Relative path asset bundles & cross-origin stripping
-└── package.json         # Core script wrappers
+├── SKILL.md                 # Core AI System Prompt Instructions & Guidelines
+└── assets/                  # Scaffolding templates injected by the AI agent
+    ├── BoundingBox.tsx      # Dual-mode mobile WebView & aspect-ratio scaling component
+    ├── global.css           # Touch preventing, scrollbar neutralizing, safe area styles
+    ├── useGameLoop.ts       # requestAnimationFrame based high-performance game loop hook
+    ├── vite-plugin-crossorigin.ts # Itch.io CORS/sandbox script attribute stripper plugin
+    ├── setup-mobile-env.ps1 # Local portable JDK 21 and Android SDK bootstrapper script
+    └── build-apk.ps1        # Local portable assembly compile & packaging script
 ```
+
+---
+
+## 🚀 How to Load This Skill in Your AI Assistant
+
+### Method 1: Local Skill Directory Reference (Gemini / Antigravity)
+If you are running an agent platform that supports local plugin overrides:
+1. Clone this repository into your local configurations directory:
+   ```bash
+   git clone https://github.com/ishanmanjrekar/portable-android-game-scaffold.git ~/.gemini/config/skills/web-2d-game-setup
+   ```
+2. The AI assistant will automatically discover the `/web-2d-game-setup` command, read the system guidelines in `SKILL.md`, and copy files from the `assets/` subdirectory when requested to build a new game!
+
+### Method 2: System Prompt Context Feeding (Generic AI Models)
+If you are using a standard AI chat interface (like ChatGPT or Claude.ai) to scaffold a game:
+1. Copy the entire contents of [SKILL.md](./SKILL.md).
+2. Paste it as a system instruction or context header, saying:
+   > *"Act as an expert Game Architect. Follow the instructions and template structures in the text below to scaffold a new cross-platform React 2D game project for me."*
 
 ---
 
 ## 📄 License
-This project is licensed under the MIT License - feel free to customize and launch your own games!
+This repository is licensed under the MIT License - feel free to share, modify, and build custom AI-gamedev skill libraries!
