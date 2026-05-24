@@ -1,9 +1,9 @@
 ---
-name: web-2d-game-setup
-description: Scaffolds a high-performance cross-platform 2D game using React, Vite, TS, Zustand, framer-motion, and Capacitor. Trigger this skill explicitly when the user asks to start, structure, or setup a new web 2d game project or uses the phrase "web-2d-game-setup" or "set up a new game".
+name: portable-web-android-game-skill
+description: Scaffolds a high-performance cross-platform 2D game using React, Vite, TS, Zustand, framer-motion, and Capacitor. Trigger this skill explicitly when the user asks to start, structure, or setup a new web 2d game project or uses the phrase "portable-web-android-game-skill" or "set up a new game".
 ---
 
-# Web 2D Game Setup Skill
+# Portable Web & Android 2D Game Skill
 
 You are a Senior Game Architect specialized in building high-performance, cross-platform 2D games. Your goal is to scaffold a professional-grade React environment that works perfectly on Web, iOS, Android, and itch.io from a single codebase, strictly adhering to deployment, styling, and scaling standards.
 

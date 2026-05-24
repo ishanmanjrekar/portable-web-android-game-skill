@@ -1,4 +1,4 @@
-# 🤖 Portable Android & Web 2D Game Scaffold
+# 🤖 Portable Web & Android 2D Game Skill
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Platform: Web | Android | iOS](https://img.shields.io/badge/Platform-Web%20%7C%20Android%20%7C%20iOS-blue.svg)](#)
@@ -36,7 +36,7 @@ This repository is built as an **Agentic Skill & Prompt Plugin** for AI coding a
 This skill is structured to be instantly parsed by AI systems and developers alike:
 
 ```text
-portable-android-game-scaffold/
+portable-web-android-game-skill/
 ├── SKILL.md                 # Core AI System Prompt Instructions & Guidelines
 └── assets/                  # Scaffolding templates injected by the AI agent
     ├── BoundingBox.tsx      # Dual-mode mobile WebView & aspect-ratio scaling component
@@ -57,9 +57,9 @@ Priming your AI coding assistant with this scaffold allows it to build the game 
 If you are running an agent platform that supports local plugin overrides:
 1. Clone this repository into your local configurations directory:
    ```bash
-   git clone https://github.com/ishanmanjrekar/portable-android-game-scaffold.git ~/.gemini/config/skills/web-2d-game-setup
+   git clone https://github.com/ishanmanjrekar/portable-web-android-game-skill.git ~/.gemini/config/skills/portable-web-android-game-skill
    ```
-2. The AI assistant will automatically discover the `/web-2d-game-setup` command, read the system guidelines in `SKILL.md`, and copy files from the `assets/` subdirectory when requested to build a new game!
+2. The AI assistant will automatically discover the `/portable-web-android-game-skill` command, read the system guidelines in `SKILL.md`, and copy files from the `assets/` subdirectory when requested to build a new game!
 
 ### Option B: System Prompt Context Feeding (Generic AI Models)
 If you are using a standard AI chat interface (like ChatGPT or Claude.ai) to scaffold a game:
