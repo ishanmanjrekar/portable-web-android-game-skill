@@ -49,23 +49,63 @@ portable-web-android-game-skill/
 
 ---
 
-## 🚀 How to Load This Skill in Your AI Assistant
+## 🚀 How to Use This Skill in Any AI Tool
 
-Priming your AI coding assistant with this scaffold allows it to build the game environment for you in seconds.
+Whether you are using a terminal-based agent, an editor like Cursor, or just standard web chat interfaces, you can easily load this skill to scaffold a fully functional, cross-platform 2D game in seconds.
 
-### Option A: Local Skill Directory Reference (Gemini / Antigravity)
-If you are running an agent platform that supports local plugin overrides:
-1. Clone this repository into your local configurations directory:
+### 👶 Noob-Friendly: The "Just Tell the AI" Method (Easiest)
+If you don't want to deal with command lines or cloning repositories, you can simply feed this repository URL directly to your AI!
+
+1. Open your AI coding assistant or chat interface (e.g., ChatGPT, Claude.ai, Cursor Chat, Copilot, etc.).
+2. Copy this URL: `https://github.com/ishanmanjrekar/portable-web-android-game-skill`
+3. Paste the URL and send this prompt to your AI:
+   > *"Please read the instructions and templates at this link: https://github.com/ishanmanjrekar/portable-web-android-game-skill. Once you understand them, use them to scaffold a new portable 2D web and Android game for me in my current directory!"*
+4. Sit back and watch the AI do the work!
+
+---
+
+### 🛠️ Tool-Specific Setup Instructions
+
+If you want a more integrated experience, choose your preferred AI assistant below:
+
+#### 1. Cursor & Windsurf (Editor-based AI)
+To use this skill inside Cursor or Windsurf:
+* **Option A (URL Reference)**: Start a Composer or Chat session, type `@` followed by the URL:
+  `@https://github.com/ishanmanjrekar/portable-web-android-game-skill`
+  Then ask: *"Use this skill to set up a new React 2D game project."*
+* **Option B (Local Context)**: Clone this repository into an empty folder or download the files. Put `SKILL.md` and the `assets` folder in your project's root. In Cursor, refer to the local file:
+  `@SKILL.md Please scaffold the game using these instructions and the assets directory.`
+
+#### 2. Claude Code (Terminal-based AI)
+Claude Code has full access to command execution and local file reads:
+1. Initialize your project folder and clone this repository inside:
+   ```bash
+   git clone https://github.com/ishanmanjrekar/portable-web-android-game-skill.git
+   ```
+2. Start Claude by running:
+   ```bash
+   claude
+   ```
+3. Prompt Claude:
+   > *"Read `portable-web-android-game-skill/SKILL.md` and use the templates in `portable-web-android-game-skill/assets` to scaffold a new game in my current directory."*
+
+#### 3. Gemini / Antigravity (Local Plugin / Skill overrides)
+If your AI agent supports local config-based skill folders (like Antigravity / Gemini Code Assist):
+1. Clone this repository directly into your local AI configuration directory:
    ```bash
    git clone https://github.com/ishanmanjrekar/portable-web-android-game-skill.git ~/.gemini/config/skills/portable-web-android-game-skill
    ```
-2. The AI assistant will automatically discover the `/portable-web-android-game-skill` command, read the system guidelines in `SKILL.md`, and copy files from the `assets/` subdirectory when requested to build a new game!
+2. In your workspace, simply trigger the skill by asking the agent:
+   > *"set up a new game"* or *"use portable-web-android-game-skill"*
+   The agent will automatically locate `SKILL.md` and the assets, prompt you with an implementation plan, and scaffold the game upon approval.
 
-### Option B: System Prompt Context Feeding (Generic AI Models)
-If you are using a standard AI chat interface (like ChatGPT or Claude.ai) to scaffold a game:
-1. Copy the entire contents of [SKILL.md](./SKILL.md).
-2. Paste it as a system instruction or context header, saying:
-   > *"Act as an expert Game Architect. Follow the instructions and template structures in the text below to scaffold a new cross-platform React 2D game project for me."*
+#### 4. ChatGPT / Claude.ai (Web Interfaces)
+If you're using a web browser interface:
+1. Open the [SKILL.md](./SKILL.md) file in this repository.
+2. Copy the entire contents of the file.
+3. Paste it into your chat box and prepend it with:
+   > *"I want you to act as an expert Game Architect. Follow the instructions and template structures in the text below to scaffold a new cross-platform React 2D game project for me:"*
+   *(Paste contents of SKILL.md here)*
 
 ---
 
