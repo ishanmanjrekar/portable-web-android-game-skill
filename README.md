@@ -16,9 +16,9 @@ This repository is built as an **Agentic Skill & Prompt Plugin** for AI coding a
 * **Local SDK/JDK Sandboxing**: Contains pre-configured PowerShell scripts (`setup-mobile-env.ps1` and `build-apk.ps1`) that bootstrap a localized Adoptium OpenJDK 21 and the Android Command Line Tools under `/.local-env/`.
 * **No Heavy IDE Requirements**: Compile fully-signed native debug Android APKs directly from your command-line interface without installing Android Studio, Gradle, or setting global environment variables.
 
-### 2. Aspect-Ratio Bounding Box Scaling (Web vs. Native)
-* **Web & Itch.io Embeds**: Renders the game inside an aspect-ratio-locked virtual viewport that matches simulated phone or desktop screens without using blind CSS translation hacks.
-* **Capacitor Mobile Shell**: Automatically detects when running inside native WebViews, unlocking 100% fluid, edge-to-edge rendering that scales dynamically around camera notches, rounded device corners, and system navigation bars using safe-area variables (`env(safe-area-inset-*)`).
+### 2. Aspect-Ratio Bounding Box Scaling (Desktop vs. Mobile & Native)
+* **Desktop Web & Desktop Itch.io Embeds**: Renders the game inside an aspect-ratio-locked virtual viewport that matches simulated phone or desktop screens with simulated device framing (`borderRadius`, `boxShadow`).
+* **Mobile Web, Mobile Itch.io & Capacitor Shell**: Automatically detects mobile browsers or native WebViews, unlocking 100% fluid, edge-to-edge, borderless rendering that scales dynamically around camera notches, rounded device corners, and system navigation bars using safe-area variables (`env(safe-area-inset-*)`).
 
 ### 3. Native Sandboxed Embed Support (Itch.io Fix)
 * **CORS Sandbox Bypass**: Integrates a custom Vite build plugin (`vite-plugin-crossorigin.ts`) that automatically strips `crossorigin` attributes from compiled HTML `<script>` and `<link>` tags.
@@ -44,7 +44,8 @@ portable-web-android-game-skill/
     ├── useGameLoop.ts       # requestAnimationFrame based high-performance game loop hook
     ├── vite-plugin-crossorigin.ts # Itch.io CORS/sandbox script attribute stripper plugin
     ├── setup-mobile-env.ps1 # Local portable JDK 21 and Android SDK bootstrapper script
-    └── build-apk.ps1        # Local portable assembly compile & packaging script
+    ├── build-apk.ps1        # Local portable assembly compile & packaging script
+    └── build-itch.ps1       # Local portable Itch.io ZIP packager script
 ```
 
 ---

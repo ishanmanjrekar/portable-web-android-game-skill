@@ -40,8 +40,8 @@ When this skill triggers, **do not** begin modifying the user's workspace immedi
 ### 2. Layout & Scaling Logic (The Advanced Bounding Box Pattern)
 - **No Translation Centering**: Do NOT use blind `translate(-50%, -50%)` for centering.
 - **Bounding Box Wrapper**: Read `assets/BoundingBox.tsx` and implement this pattern.
-  - **Standard Web/Itch.io Mode**: Calculates scale based on parent container and screen size, enforcing aspect ratio scale bounds with `transform: scale(scale)` and `transform-origin: center center`.
-  - **Capacitor Native Mode**: Automatically detects native WebView shell wrapper `(window as any).Capacitor !== undefined` and switches to a 100% fluid, unscaled, borderless layout (`scale: 1`), passing full sizing responsibility directly to the game's responsive views.
+  - **Desktop Web / Desktop Itch.io Mode**: Calculates scale based on parent container and screen size, enforcing aspect ratio scale bounds with `transform: scale(scale)` and simulated phone frame styling (`borderRadius: '16px'`, `boxShadow`) for desktop testing.
+  - **Fluid Mobile Mode (Mobile Web, Mobile Itch.io & Native Capacitor)**: Automatically detects native WebView shell or mobile/tablet web browsers (using user agent and touch capability bounds) and switches to a 100% fluid, unscaled, borderless layout (`scale: 1`), passing full sizing responsibility directly to responsive components and eliminating empty borders.
 - **Elastic Viewport Rules**: Layout components MUST use fluid CSS layout paradigms (e.g., Flexbox or Grid) where panels and controls are positioned relative to container edges (`flex-none` or bolted header/footer) and the canvas/grid components are elastic (`flex-1 min-h-0`).
 - **Container Queries for Grids**: Grid layouts (e.g. tile matrices) MUST use CSS Container Queries (`container-type: size`) to auto-fit. Example:
   ```css
@@ -51,7 +51,7 @@ When this skill triggers, **do not** begin modifying the user's workspace immedi
   }
   ```
   This ensures layouts never overflow on extreme screen aspect ratios like modern tall devices (19.5:9) or tablets.
-- **Scrollbar Neutralization**: Use the CSS from `assets/global.css` to hide scrollbars globally and prevent OS-level tracks from cannibalizing width.
+- **Scrollbar Neutralization & Safe Area**: Use the CSS from `assets/global.css` to hide scrollbars globally and ensure `#root` has `box-sizing: border-box;` with safe area padding (`env(safe-area-inset-*)`) to prevent OS-level tracks, notches, and home swipe bars from causing overflow.
 
 ### 3. Mobile & Native Integration (Capacitor)
 - Initialize Capacitor with `webDir: 'dist'`.
@@ -74,11 +74,12 @@ When this skill triggers, **do not** begin modifying the user's workspace immedi
   padding-right: env(safe-area-inset-right);
   ```
 
-### 4. Portable Android Build Automation
-To enable seamless development without manual IDE setup or heavy local installation dependencies:
-- **Scripts**: You MUST bundle two portable environment build scripts under `scripts/`:
+### 4. Portable Android & Itch Build Automation
+To enable seamless development and automated publishing without manual environment setup:
+- **Scripts**: You MUST bundle portable environment build scripts under `scripts/`:
   - `scripts/setup-mobile-env.ps1`: Bootstraps Adoptium JDK 21 and Android SDK command line tools locally inside a `.local-env/` folder in the project root, automatically accepts licensing agreements, and downloads the required platforms (e.g., API 34).
-  - `scripts/build-apk.ps1`: Handles Gradle target properties pointing to `.local-env/`, runs `npm run build`, executes `cap sync`, changes to the native `android/` folder, invokes Gradle wrapper to assemble debug (`assembleDebug`), and moves the compiled APK to `/dump/`.
+  - `scripts/build-apk.ps1`: Handles Gradle target properties pointing to `.local-env/`, runs `npm run build`, executes `cap sync`, changes to the native `android/` folder, invokes Gradle wrapper to assemble debug (`assembleDebug`), and moves the compiled APK to `/dump/` with a timestamped name.
+  - `scripts/build-itch.ps1`: Compiles the web bundle in Itch mode, packages the contents of the `dist/` directory into a ZIP archive using the timestamped naming convention (`[appname]-ddMMyy-HHmm-itch.zip`), and saves it in `/dump/` (avoiding hardcoded `game-upload.zip` files).
 - **Ignore Local Environments**: Add `.local-env/` directly to the project root `.gitignore`.
 
 ### 5. Performance & Animation
@@ -89,7 +90,7 @@ To enable seamless development without manual IDE setup or heavy local installat
 ### 6. Required Build Scripts (`package.json`)
 Include the following exact scripts:
 - `"build:web": "vite build"`
-- `"build:itch": "vite build && cd dist && npx bestzip ../dump/game-upload.zip *"`
+- `"build:itch": "powershell -ExecutionPolicy Bypass -File scripts/build-itch.ps1"`
 - `"build:mobile": "vite build && npx cap sync"`
 
 ### 7. Project Structure & Organization
