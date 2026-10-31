@@ -12,11 +12,14 @@ export const BoundingBox: React.FC<GameLayerProps> = ({ width, height, children 
   const [isFluidLayout, setIsFluidLayout] = useState(false);
 
   useLayoutEffect(() => {
-    // Detect if running inside the Capacitor native WebView shell or a mobile/tablet browser
-    const checkCapacitor = typeof window !== 'undefined' && ('Capacitor' in window || (window as any).Capacitor !== undefined);
+    // Detect if running inside the Capacitor native WebView shell or a mobile/tablet browser.
+    // Uses Math.min(innerWidth, innerHeight) <= 800 so both Portrait and Landscape phones are detected.
+    const checkCapacitor =
+      typeof window !== 'undefined' &&
+      ('Capacitor' in window || (window as unknown as { Capacitor?: unknown }).Capacitor !== undefined);
     const checkIsMobile = () =>
       /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-      (navigator.maxTouchPoints > 0 && window.innerWidth <= 800);
+      (navigator.maxTouchPoints > 0 && Math.min(window.innerWidth, window.innerHeight) <= 800);
 
     const handleResize = () => {
       const isFluid = checkCapacitor || checkIsMobile();
@@ -39,10 +42,10 @@ export const BoundingBox: React.FC<GameLayerProps> = ({ width, height, children 
         const availH = Math.min(clientHeight || window.innerHeight, realScreenH);
 
         if (isFluid) {
-          // Full-screen fluid layout
+          // Full-screen fluid layout (Mobile Web, Mobile Itch.io, Native APK)
           setScale(1);
         } else {
-          // Standard Web/Itch.io desktop: scale simulated phone viewport
+          // Standard Web/Itch.io desktop: scale simulated viewport (Portrait or Landscape)
           const scaleX = availW / width;
           const scaleY = availH / height;
           setScale(Math.min(scaleX, scaleY));
@@ -60,12 +63,14 @@ export const BoundingBox: React.FC<GameLayerProps> = ({ width, height, children 
     };
   }, [width, height]);
 
-  // Fluid layouts run borderless and fluid; Web desktop uses simulated phone sizing
+  // Fluid layouts run borderless and edge-to-edge; Desktop web uses simulated device framing.
+  // containerType: 'size' ensures cqw/cqh and @container queries always measure the game box, never the desktop monitor.
   const innerStyle: React.CSSProperties = isFluidLayout
     ? {
         width: '100%',
         height: '100%',
         position: 'relative',
+        containerType: 'size',
       }
     : {
         width: `${width}px`,
@@ -76,6 +81,7 @@ export const BoundingBox: React.FC<GameLayerProps> = ({ width, height, children 
         boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.7)',
         borderRadius: '16px',
         overflow: 'hidden',
+        containerType: 'size',
       };
 
   return (
@@ -87,10 +93,10 @@ export const BoundingBox: React.FC<GameLayerProps> = ({ width, height, children 
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        overflow: 'hidden'
+        overflow: 'hidden',
       }}
     >
-      <div style={innerStyle}>
+      <div data-layout={isFluidLayout ? 'fluid' : 'framed'} style={innerStyle}>
         {children}
       </div>
     </div>

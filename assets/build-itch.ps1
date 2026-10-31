@@ -10,30 +10,39 @@ Write-Host "         COMPILING ITCH.IO ZIP PACKAGE        " -ForegroundColor Cya
 Write-Host "==============================================" -ForegroundColor Cyan
 
 # -------------------------------------------------------------
-# 1. Purge Web Build Caches
+# 1. Run Pre-Build Harness Verification & Purge Web Caches
 # -------------------------------------------------------------
+$VerifyScript = Join-Path $PSScriptRoot "verify-build.js"
+if (Test-Path $VerifyScript) {
+    node $VerifyScript
+}
+
 Write-Host "`n[1/4] Purging web build caches..." -ForegroundColor Yellow
 if (Test-Path $DistDir) { 
     Remove-Item -Path $DistDir -Recurse -Force -ErrorAction SilentlyContinue 
 }
 
 # -------------------------------------------------------------
-# 2. Build Web Bundle in Itch Mode
+# 2. Build Web Bundle in Itch Mode (Loads .env.itch)
 # -------------------------------------------------------------
 Write-Host "`n[2/4] Compiling web bundle in Itch mode..." -ForegroundColor Yellow
 
-$UpdateAssetsScript = Join-Path $ProjectRootDir "scripts\update-assets.js"
+$UpdateAssetsScript = Join-Path $PSScriptRoot "update-assets.js"
 if (Test-Path $UpdateAssetsScript) {
     node $UpdateAssetsScript
 }
 
-npx vite build --mode itch
+Push-Location $ProjectRootDir
+try {
+    npx vite build --mode itch
+} finally {
+    Pop-Location
+}
 
 # -------------------------------------------------------------
 # 3. Zip Finished dist Folder to Dump Directory
 # -------------------------------------------------------------
 $Timestamp = Get-Date -Format "ddMMyy-HHmm"
-# Read name dynamically from package.json
 $PackageJson = Get-Content -Raw -Path (Join-Path $ProjectRootDir "package.json") | ConvertFrom-Json
 $AppName = $PackageJson.name
 $TargetZipName = "${AppName}-${Timestamp}-itch.zip"
@@ -45,16 +54,16 @@ if (-not (Test-Path $DumpDir)) {
     New-Item -ItemType Directory -Path $DumpDir | Out-Null
 }
 
+# Change directory to dist so index.html is at the root of the ZIP archive
 Push-Location $DistDir
 try {
-    # Use bestzip to package the contents of dist
     npx bestzip $TargetZipPath *
 } finally {
     Pop-Location
 }
 
 # -------------------------------------------------------------
-# 4. Verification and Clean Up
+# 4. Verification
 # -------------------------------------------------------------
 if (Test-Path $TargetZipPath) {
     Write-Host "`n==============================================" -ForegroundColor Green

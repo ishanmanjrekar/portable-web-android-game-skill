@@ -8,8 +8,8 @@ import { useEffect, useRef } from 'react';
  * Clamps maximum delta time to prevent physics clipping on lag spikes.
  */
 export function useGameLoop(callback: (deltaTime: number) => void, maxDeltaTime: number = 100) {
-  const requestRef = useRef<number>();
-  const previousTimeRef = useRef<number>();
+  const requestRef = useRef<number | undefined>(undefined);
+  const previousTimeRef = useRef<number | undefined>(undefined);
   
   // Keep callback reference updated without triggering re-effects
   const callbackRef = useRef(callback);

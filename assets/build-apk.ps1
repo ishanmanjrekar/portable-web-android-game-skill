@@ -1,24 +1,24 @@
 # Build Android APK using local portable environment
-# Run this script after 'scripts/setup-mobile-env.ps1'
+# Automatically bootstraps '.local-env' via 'scripts/setup-mobile-env.ps1' if missing.
 
 $ErrorActionPreference = "Stop"
 
-$LocalEnvDir = Join-Path $PSScriptRoot "..\.local-env"
+$ProjectRootDir = Resolve-Path (Join-Path $PSScriptRoot "..")
+$LocalEnvDir = Join-Path $ProjectRootDir ".local-env"
 $JdkDir = Join-Path $LocalEnvDir "jdk"
 $SdkDir = Join-Path $LocalEnvDir "android-sdk"
-$DumpDir = Join-Path $PSScriptRoot "..\dump"
+$DumpDir = Join-Path $ProjectRootDir "dump"
 
 Write-Host "==============================================" -ForegroundColor Cyan
 Write-Host "         COMPILING NATIVE DEBUG APK           " -ForegroundColor Cyan
 Write-Host "==============================================" -ForegroundColor Cyan
 
 # -------------------------------------------------------------
-# 1. Verify Portable Environment
+# 1. Verify (or Bootstrap) Portable Environment
 # -------------------------------------------------------------
 if (-not (Test-Path $JdkDir) -or -not (Test-Path $SdkDir)) {
-    Write-Host "Error: Local portable environment not found!" -ForegroundColor Red
-    Write-Host "Please run 'scripts/setup-mobile-env.ps1' first to install JDK and Android SDK." -ForegroundColor Yellow
-    Exit 1
+    Write-Host "Local portable environment not linked yet. Running setup-mobile-env.ps1..." -ForegroundColor Yellow
+    & (Join-Path $PSScriptRoot "setup-mobile-env.ps1")
 }
 
 # Setup env variables for compilation
@@ -27,59 +27,86 @@ $env:ANDROID_HOME = $SdkDir
 $env:PATH = "$JdkDir\bin;" + $env:PATH
 
 # -------------------------------------------------------------
-# 2. Configure local.properties for Gradle
+# 2. Run Pre-Build Harness Verification & Asset/Icon Sync
 # -------------------------------------------------------------
-$AndroidDir = Join-Path $PSScriptRoot "..\android"
-$LocalPropertiesFile = Join-Path $AndroidDir "local.properties"
+$VerifyScript = Join-Path $PSScriptRoot "verify-build.js"
+if (Test-Path $VerifyScript) {
+    node $VerifyScript
+}
 
-Write-Host "`n[1/5] Configuring Gradle SDK locations..." -ForegroundColor Yellow
-# Convert absolute SDK path for local.properties file (escaping backslashes)
-$EscapedSdkPath = $SdkDir.Replace("\", "\\")
-"sdk.dir=$EscapedSdkPath" | Out-File -FilePath $LocalPropertiesFile -Encoding ascii
+$UpdateAssetsScript = Join-Path $PSScriptRoot "update-assets.js"
+if (Test-Path $UpdateAssetsScript) {
+    node $UpdateAssetsScript
+}
 
-# -------------------------------------------------------------
-# 3. Build Web Bundle
-# -------------------------------------------------------------
-Write-Host "`n[2/5] Compiling production web bundle..." -ForegroundColor Yellow
-npm run build
-
-# -------------------------------------------------------------
-# 4. Sync Web Bundle to Capacitor Android
-# -------------------------------------------------------------
-Write-Host "`n[3/5] Syncing web bundle to Android native platform..." -ForegroundColor Yellow
-npx cap sync android
+$GenerateIconsScript = Join-Path $PSScriptRoot "generate-icons.py"
+$IconSource = Join-Path $ProjectRootDir "android-assets\icon.png"
+if ((Test-Path $GenerateIconsScript) -and (Test-Path $IconSource)) {
+    python $GenerateIconsScript
+}
 
 # -------------------------------------------------------------
-# 5. Compile the Android APK via Gradle
+# 3. Configure local.properties & Purge Stale Caches
 # -------------------------------------------------------------
-Write-Host "`n[4/5] Compiling Android APK with Gradle..." -ForegroundColor Yellow
-
-# Store current location and change to android/ directory
+$AndroidDir = Join-Path $ProjectRootDir "android"
 if (-not (Test-Path $AndroidDir)) {
     Write-Host "Error: The native 'android' directory does not exist!" -ForegroundColor Red
-    Write-Host "Please ensure you have initialized the Capacitor Android project by running 'npx cap add android' and synced the web bundle." -ForegroundColor Yellow
+    Write-Host "Please ensure you have initialized the Capacitor Android project by running 'npx cap add android'." -ForegroundColor Yellow
     Exit 1
 }
 
-Push-Location $AndroidDir
+$LocalPropertiesFile = Join-Path $AndroidDir "local.properties"
+Write-Host "`n[1/5] Configuring Gradle SDK locations..." -ForegroundColor Yellow
+$EscapedSdkPath = $SdkDir.Replace("\", "\\")
+"sdk.dir=$EscapedSdkPath" | Out-File -FilePath $LocalPropertiesFile -Encoding ascii
 
+Write-Host "`n[2/5] Purging stale web and native build caches..." -ForegroundColor Yellow
+$DistDir = Join-Path $ProjectRootDir "dist"
+$CapacitorAssetsDir = Join-Path $ProjectRootDir "android\app\src\main\assets\public"
+$GradleCacheDir = Join-Path $ProjectRootDir "android\.gradle"
+$ViteCacheDir = Join-Path $ProjectRootDir "node_modules\.vite"
+
+if (Test-Path $DistDir) { Remove-Item -Path $DistDir -Recurse -Force -ErrorAction SilentlyContinue }
+if (Test-Path $CapacitorAssetsDir) { Remove-Item -Path $CapacitorAssetsDir -Recurse -Force -ErrorAction SilentlyContinue }
+if (Test-Path $GradleCacheDir) { Remove-Item -Path $GradleCacheDir -Recurse -Force -ErrorAction SilentlyContinue }
+if (Test-Path $ViteCacheDir) { Remove-Item -Path $ViteCacheDir -Recurse -Force -ErrorAction SilentlyContinue }
+
+# -------------------------------------------------------------
+# 4. Build Web Bundle & Sync to Capacitor Android
+# -------------------------------------------------------------
+Write-Host "`n[3/5] Compiling production web bundle..." -ForegroundColor Yellow
+Push-Location $ProjectRootDir
 try {
-    # Run the Gradle assembleDebug task
-    & .\gradlew.bat assembleDebug
+    npm run build
+    Write-Host "`n[4/5] Syncing web bundle to Android native platform..." -ForegroundColor Yellow
+    npx cap sync android
 } finally {
-    # Always restore original directory location
     Pop-Location
 }
 
 # -------------------------------------------------------------
-# 6. Copy Finished APK to Dump Directory
+# 5. Compile the Android APK via Gradle
+# -------------------------------------------------------------
+Write-Host "`n[5/5] Compiling Android APK with Gradle..." -ForegroundColor Yellow
+
+Push-Location $AndroidDir
+try {
+    & .\gradlew.bat clean assembleDebug
+} finally {
+    Pop-Location
+}
+
+# -------------------------------------------------------------
+# 6. Copy Finished APK to Dump Directory with Timestamp
 # -------------------------------------------------------------
 $BuiltApkPath = Join-Path $AndroidDir "app\build\outputs\apk\debug\app-debug.apk"
-$TargetApkPath = Join-Path $DumpDir "game-debug.apk"
+$Timestamp = Get-Date -Format "ddMMyy-HHmm"
+$PackageJson = Get-Content -Raw -Path (Join-Path $ProjectRootDir "package.json") | ConvertFrom-Json
+$AppName = $PackageJson.name
+$TargetApkName = "${AppName}-${Timestamp}-android.apk"
+$TargetApkPath = Join-Path $DumpDir $TargetApkName
 
 if (Test-Path $BuiltApkPath) {
-    Write-Host "`n[5/5] Relocating APK to project dump/ folder..." -ForegroundColor Yellow
-    
     if (-not (Test-Path $DumpDir)) {
         New-Item -ItemType Directory -Path $DumpDir | Out-Null
     }

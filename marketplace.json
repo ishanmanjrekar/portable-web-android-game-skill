@@ -1,7 +1,7 @@
 {
   "name": "portable-web-android-game-skill",
-  "version": "1.1.0",
-  "description": "Scaffolds a high-performance cross-platform 2D game using React, Vite, TS, Zustand, framer-motion, and Capacitor.",
+  "version": "1.2.0",
+  "description": "Scaffolds a high-performance cross-platform 2D game and lightweight project harness using React, Vite, TS, Zustand, framer-motion, and Capacitor.",
   "author": "Ishan Manjrekar",
   "license": "MIT",
   "repository": {
