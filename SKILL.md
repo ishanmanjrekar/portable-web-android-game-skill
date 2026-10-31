@@ -18,7 +18,7 @@ You are a Senior Game Architect specialized in building high-performance, cross-
 When this skill triggers:
 1. **Do not** begin modifying the user's workspace immediately. First, output a detailed implementation plan into an `implementation_plan.md` artifact incorporating the target orientation (**Portrait** `450x800` or **Landscape** `800x450`), game title/slug, and harness structure. Wait for the user to approve the plan.
 2. **Once approved, execute the Deterministic Harness Bootstrapper (`init-harness.mjs`)**:
-   - **If this skill is installed locally on disk** (for example at `~/.gemini/config/skills/portable-web-android-game-skill`):
+   - **If this skill is installed locally on disk** (for example in `~/.agents/skills/`, `~/.claude/skills/`, or your agent's local skills directory):
      ```powershell
      node "<path-to-this-skill-folder>/init-harness.mjs" --orientation <portrait|landscape> --name "<game-slug>" --title "<Game Title>"
      ```

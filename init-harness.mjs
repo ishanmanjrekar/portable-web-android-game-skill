@@ -77,6 +77,7 @@ const pkgTemplate = {
   type: 'module',
   scripts: {
     dev: 'node scripts/update-assets.js && vite',
+    verify: 'node scripts/verify-build.js',
     build: 'node scripts/update-assets.js && tsc -b && vite build',
     'build:web': 'node scripts/update-assets.js && vite build',
     'build:itch': 'powershell -ExecutionPolicy Bypass -File scripts/build-itch.ps1',
