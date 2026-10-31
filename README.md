@@ -4,19 +4,34 @@
 [![Platform: Web | Android | iOS](https://img.shields.io/badge/Platform-Web%20%7C%20Android%20%7C%20iOS-blue.svg)](#)
 [![Stack: React + Vite + TypeScript](https://img.shields.io/badge/Stack-React%20%2B%20Vite%20%2B%20TypeScript-orange.svg)](#)
 
-A cross-platform 2D game **scaffolding skill and lightweight development harness** for AI coding assistants (Antigravity, Gemini, Claude Code, Cursor, Windsurf).
+A cross-platform 2D game **scaffolding skill and lightweight development harness** for AI coding assistants (Antigravity, Gemini, Claude Code, Cursor, Windsurf, ChatGPT).
 
-Most game templates only set up Day-1 boilerplate—and then in later chat sessions, your AI forgets how your screen scaling, asset paths, and build scripts work. This repository solves that by doing **two things**:
-1. **Day 1 (The Skill)**: Scaffolds a complete React + Vite + TypeScript + Zustand + Framer Motion + Capacitor 2D game (supporting both **Portrait/Vertical** and **Landscape/Horizontal** games) with zero-Android-Studio APK compilation and sandbox-safe Itch.io packaging.
-2. **Day 2 to Launch (The Harness)**: Leaves behind a **permanent AI rulebook (`AGENTS.md`)**, a **connected documentation hub (`docs/`)**, a **UI reference drop folder (`ui-refs/`)**, and **automated pre-build inspectors (`verify-build.js`)** inside your new game repo—so every future chat session builds features, converts UI designs, and exports builds without back-and-forth fixes.
+> ### 🤖 Instructions for AI Coding Agents Reading This URL
+> If a user asked you to set up a game using this repository URL (`https://github.com/ishanmanjrekar/portable-web-android-game-skill`), **do not** try to guess or scrape individual template files from GitHub's web interface.
+> 1. Propose a brief implementation plan confirming the game's title, slug, and orientation (`portrait` `450x800` or `landscape` `800x450`).
+> 2. Once approved, run the deterministic harness bootstrapper in the user's project directory:
+>    ```powershell
+>    git clone https://github.com/ishanmanjrekar/portable-web-android-game-skill.git .temp-harness
+>    node .temp-harness/init-harness.mjs --orientation portrait --name "my-game" --title "My Game"
+>    Remove-Item -Recurse -Force .temp-harness
+>    ```
+>    *(If the skill is already installed locally at `~/.gemini/config/skills/portable-web-android-game-skill`, simply run `node ~/.gemini/config/skills/portable-web-android-game-skill/init-harness.mjs ...` directly.)*
 
 ---
 
-## 🌟 What the Harness Gives You
+## 🌟 Why a Skill + Harness?
 
-### 1. Persistent AI Memory Across Chat Sessions (`AGENTS.md` & `.agents/rules/`)
-* **No More "Turn 2 Amnesia"**: When the skill scaffolds your game, it installs `AGENTS.md` and `.agents/rules/game-harness.md` directly into your new game repository.
-* **Automatic Guardrails**: Even if you open a brand-new chat session days later without calling this skill again, the AI working in your game repo automatically knows to use container queries (`cqw`/`cqh`) instead of broken desktop `sm:`/`lg:` breakpoints, use `AssetLoader.resolvePath()` for Itch.io compatibility, and keep your `docs/` cross-linked.
+Most game templates only set up Day-1 boilerplate—and then in later chat sessions, your AI forgets how your screen scaling, asset paths, and build scripts work. This repository solves that by doing **two things**:
+1. **Day 1 (The Skill & `init-harness.mjs`)**: Deterministically scaffolds a complete React 19 + Vite + TypeScript + Zustand + Framer Motion + Capacitor 2D game (supporting both **Portrait/Vertical** and **Landscape/Horizontal** games) with zero-Android-Studio APK compilation and sandbox-safe Itch.io packaging.
+2. **Day 2 to Launch (The Harness)**: Leaves behind **permanent AI rulebooks (`AGENTS.md`, `CLAUDE.md`, `.agents/rules/game-harness.md`)**, a **connected documentation hub (`docs/`)**, a **UI reference drop folder (`ui-refs/`)**, and **automated pre-build inspectors (`verify-build.js`)** inside your new game repo—so every future chat session builds features, converts UI designs, and exports builds without back-and-forth fixes.
+
+---
+
+## 🛠️ Key Features & Architecture
+
+### 1. Persistent AI Memory Across All Tools (`AGENTS.md`, `CLAUDE.md`, `.agents/rules/`)
+* **No More "Turn 2 Amnesia"**: Installs `AGENTS.md`, `CLAUDE.md`, and `.agents/rules/game-harness.md` directly into your new game repository so **Antigravity, Claude Code, Cursor, and Codex** all load your project rules automatically in every future chat session.
+* **Automatic Guardrails**: Even in a brand-new chat session days later, the AI automatically knows to use container queries (`cqw`/`cqh`) instead of broken desktop `sm:`/`lg:` breakpoints, use `AssetLoader.resolvePath()` for Itch.io compatibility, and keep your `docs/` cross-linked.
 
 ### 2. Portrait & Landscape Bounding Box Scaling
 * **Desktop Web & Desktop Itch.io**: Renders the game inside an aspect-ratio-locked virtual viewport (`450×800` for Portrait or `800×450` for Landscape) with simulated device framing and `containerType: 'size'`.
@@ -42,12 +57,13 @@ Once you scaffold a project with this harness, here is how you build and ship a 
 ```
 
 ### Step 1: Scaffold the Project (Once per Game)
-Trigger `portable-web-android-game-skill` and tell the AI your game concept and whether it is **Portrait (Vertical)** or **Landscape (Horizontal)**. It creates this workspace for you:
+Trigger `portable-web-android-game-skill` (or give your AI the GitHub link) and tell the AI your game concept and whether it is **Portrait (Vertical)** or **Landscape (Horizontal)**. It creates this workspace for you:
 
 ```text
 your-new-game/
-├── AGENTS.md                        # Permanent AI rulebook read automatically in future chats
-├── .agents/rules/game-harness.md    # Auto-loaded workspace rules for Antigravity / Cursor
+├── AGENTS.md                        # Permanent AI rulebook (Antigravity, Cursor, Codex)
+├── CLAUDE.md                        # Permanent AI rulebook (Claude Code)
+├── .agents/rules/game-harness.md    # Auto-loaded workspace rules
 ├── .env.itch                        # Auto-disables debug/cheat menus on Itch.io exports
 ├── docs/                            # Connected documentation hub
 │   ├── game-design.md               # Master index, core loop, mechanics & progression
@@ -63,7 +79,7 @@ your-new-game/
 ### Step 2: Iterate on Game Design & Architecture (`docs/`)
 Ask the AI in any chat session:
 > *"Update `docs/game-design.md` with our core loop, and create a `docs/economy.md` file for our XP and shop formulas."*
-* Because of the harness rules in `AGENTS.md`, the AI will automatically link `economy.md` inside `docs/game-design.md` and keep all config numbers in `src/config/*.json`.
+* Because of the harness rules in `AGENTS.md` / `CLAUDE.md`, the AI will automatically link `economy.md` inside `docs/game-design.md` and keep all config numbers in `src/config/*.json`.
 
 ### Step 3: Convert UI Mocks into Screens (`ui-refs/`)
 Export your screen designs (e.g., from **Google Stitch**) as HTML or PNGs and drop them into `ui-refs/`. Then ask the AI:
@@ -94,12 +110,16 @@ Run these commands (or ask the AI to run them) whenever you want a build:
 ```text
 portable-web-android-game-skill/
 ├── SKILL.md                        # Master instructions executed when scaffolding a game
+├── init-harness.mjs                # Deterministic Node.js bootstrapper for any AI agent
 └── assets/                         # Harness & template files injected into new game projects
-    ├── AGENTS.md                   # Permanent project rules dropped into the new game repo
+    ├── AGENTS.md                   # Permanent project rules (copied to AGENTS.md, CLAUDE.md, .agents/rules/)
+    ├── App.tsx                     # Starter App component wired with BoundingBox & .game-container
+    ├── gameStore.ts                # Starter persisted Zustand store
     ├── BoundingBox.tsx             # Portrait/Landscape dual-mode scaling & @container component
     ├── global.css                  # Touch preventing, scrollbar neutralizing, safe area styles
     ├── useGameLoop.ts              # React 19 compatible requestAnimationFrame game loop hook
     ├── AssetLoader.ts              # Itch.io-safe image & audio preloader (BASE_URL aware)
+    ├── vite.config.ts              # Starter Vite config with base './' & stripCrossoriginPlugin
     ├── vite-plugin-crossorigin.ts  # Itch.io CORS/sandbox script attribute stripper plugin
     ├── .env.itch                   # Auto-disables debug/cheat panels in Itch builds
     ├── verify-build.js             # Pre-flight inspector for paths, names, and doc links
@@ -120,11 +140,8 @@ portable-web-android-game-skill/
 ## 🚀 How to Install & Trigger This Skill in Any AI Tool
 
 ### 👶 Noob-Friendly: The "Just Tell the AI" Method (Easiest)
-If you don't want to deal with command lines or cloning repositories, feed this repository URL directly to your AI:
-
-1. Open your AI coding assistant (Antigravity, Cursor, Claude, ChatGPT, etc.).
-2. Paste this prompt:
-   > *"Please read the instructions and templates at https://github.com/ishanmanjrekar/portable-web-android-game-skill. Once you understand them, use them to scaffold a new portable 2D web and Android game harness for me in my current directory!"*
+Open your AI coding assistant (Antigravity, Claude Code, Cursor, Windsurf, etc.) in your new project folder and paste:
+> *"Please read https://github.com/ishanmanjrekar/portable-web-android-game-skill and use its `init-harness.mjs` bootstrapper to set up a new portable 2D web and Android game harness in my current directory!"*
 
 ---
 
@@ -137,20 +154,13 @@ If you don't want to deal with command lines or cloning repositories, feed this 
    ```
 2. In any new workspace, simply prompt the agent:
    > *"set up a new game"* or *"use portable-web-android-game-skill"*
-   The agent will propose an implementation plan and scaffold the full game harness upon approval. After Day 1, the injected `AGENTS.md` and `.agents/rules/game-harness.md` files automatically guide the agent in every future session.
 
 #### 2. Cursor & Windsurf (Editor-based AI)
-* **Option A (URL Reference)**: In Composer/Chat, reference `@https://github.com/ishanmanjrekar/portable-web-android-game-skill` and ask: *"Use this skill to set up a new React 2D game project."*
-* **Option B (Local Context)**: Clone this repo and reference `@SKILL.md Please scaffold the game using these instructions and the assets directory.`
+* In Composer/Chat, reference `@https://github.com/ishanmanjrekar/portable-web-android-game-skill` and ask: *"Use this repo's `init-harness.mjs` to set up a new React 2D game project."*
 
 #### 3. Claude Code (Terminal-based AI)
-1. Clone this repository or point Claude Code to it:
-   ```bash
-   git clone https://github.com/ishanmanjrekar/portable-web-android-game-skill.git
-   claude
-   ```
-2. Prompt Claude:
-   > *"Read `portable-web-android-game-skill/SKILL.md` and use the templates in `portable-web-android-game-skill/assets` to scaffold a new game in my current directory."*
+* Prompt Claude:
+  > *"Clone `https://github.com/ishanmanjrekar/portable-web-android-game-skill.git` into `.temp-harness`, run `node .temp-harness/init-harness.mjs`, and remove `.temp-harness`."*
 
 ---
 
